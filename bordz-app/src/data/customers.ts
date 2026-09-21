@@ -1,5 +1,24 @@
-export const SEED = [
-    {id: "c1", name: "Lebron James", balance: 340, lastPaid: "Sept 11"},
-    {id: "c1", name: "Hurveen Veloso", balance: 1250.5, lastPaid: "Dec 25"},
-    {id: "c1", name: "Malec Pepito", balance: 0, lastPaid: "Mar 15"}
-];
+export type Customer = {
+    id: string;
+    name: string;
+    balance: number;
+    lastPaid: string;
+};
+
+const BASE = process.env.EXPO_PUBLIC_API_URL;
+if(!BASE) throw new Error("Set EXPO_PUBLIC_API_URL in .env");
+
+function timeout(ms: number): Promise<never>{
+    return new Promise((_, fail) =>
+        setTimeout(() => fail(new Error("timeout")), ms)
+    );
+}
+
+async function get(path: string){
+    const res = await fetch(BASE + path);
+    if(!res.ok) throw new Error(String(res.status));
+    return res.json();
+}
+
+export const fetchCustomers = (): Promise<Customer[]> => get("/api/customers");
+export const fetchCustomer = (id: string): Promise<Customer> => get(`/api/customers/${id}`);

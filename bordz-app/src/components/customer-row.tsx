@@ -1,21 +1,22 @@
 import { ThemedText } from '@/components/themed-text';
-import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-type CustomerRowProps = {name: string, balance: number, lastPaid: string};
+type CustomerRowProps = {name: string, balance: number, onPress: () => void};
 
-export function CustomerRow({name, balance, lastPaid}: CustomerRowProps) {
-    const [expanded, setExpanded] = useState(false);
+export function CustomerRow({name, balance, onPress }: CustomerRowProps) {
     return(
-        <Pressable
-            onPress={() => setExpanded(!expanded)}
-            style={{paddingVertical: 14, borderBottomWidth: 1, borderColor: "#ddd"}}
-        >
-            <View style={{paddingVertical: 14, borderBottomWidth: 1, borderColor: "#ddd"}}>
-                <ThemedText style={{fontSize: 18}}>{name}</ThemedText>
-                <ThemedText>P {balance.toFixed(2)}</ThemedText>
-                {expanded && <Text>Last Paid: {lastPaid}</Text>}
-            </View>
+        <Pressable onPress={onPress} style={styles.row}>
+            <ThemedText>{name}</ThemedText>
+            <ThemedText themeColor='textSecondary'>P {balance.toFixed(2)}</ThemedText>
         </Pressable>
     );
 }
+
+const styles = StyleSheet.create({
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 12,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+});
