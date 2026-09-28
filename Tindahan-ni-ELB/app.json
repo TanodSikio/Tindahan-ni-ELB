@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Elijah Bes",
-    "slug": "bordz-app",
+    "name": "Tindahan Ni ELB",
+    "slug": "Tindahan-ni-ELB",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "bordzapp",
+    "scheme": "tindahannielb",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
