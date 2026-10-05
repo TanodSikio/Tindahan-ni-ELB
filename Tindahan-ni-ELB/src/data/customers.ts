@@ -1,9 +1,18 @@
+import { supabase } from '@/lib/supabase';
+
+export type Profile = { id: string; email: string; role: "admin" | "client"};
+
 export type Customer = {
   id: string;
   name: string;
   balance: number;
   lastPaid: string;
 };
+
+async function authHeader(){
+  const { data } = await supabase.auth.getSession();
+  return { Authorization: "Bearer " + data.session?.access_token };
+}
 
 const BASE = process.env.EXPO_PUBLIC_API_URL;
 if (!BASE) throw new Error("Set EXPO_PUBLIC_API_URL in .env");
@@ -15,7 +24,7 @@ function timeout(ms: number): Promise<never> {
 }
 
 async function get(path: string) {
-  const res = await fetch(BASE + path);
+  const res = await fetch(BASE + path, { headers: await authHeader() });
   if (!res.ok) throw new Error(String(res.status));
   return res.json();
 }
@@ -31,7 +40,7 @@ export async function addCustomer(
   const res = await Promise.race([
     fetch(BASE + "/api/customers", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(await authHeader()) },
       body: JSON.stringify({ name, balance }),
     }),
     timeout(8000),
@@ -39,3 +48,5 @@ export async function addCustomer(
   if (!res.ok) throw new Error(String(res.status));
   return res.json();
 }
+
+export const fetchProfile = (): Promise<Profile> => get("/api/me");
