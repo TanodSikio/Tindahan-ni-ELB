@@ -15,11 +15,13 @@ import { CustomerRow } from "@/components/customer-row";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useCustomers } from "@/hooks/use-customers";
+import { useProfile } from "@/hooks/use-profile";
 
 export default function CustomersScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { status, customer, problem, retry } = useCustomers();
+  const profile = useProfile();
   const [query, setQuery] = useState("");
   const [adding, setAdding] = useState(false);
 
@@ -45,7 +47,7 @@ export default function CustomersScreen() {
     return (
       <ThemedView style={styles.middle}>
         <ThemedText>No customer yet.</ThemedText>
-        <Button title="Add customer" onPress={() => setAdding(true)} />
+          <Button title="Add customer" onPress={() => setAdding(true)} />
         <AddCustomerModal
           visible={adding}
           onClose={() => setAdding(false)}
@@ -69,7 +71,9 @@ export default function CustomersScreen() {
         ]}
       />
       <ThemedText>Total owed: P {total.toFixed(2)}</ThemedText>
-      <Button title="Add customer" onPress={() => setAdding(true)} />
+      {profile?.role === "admin" && (
+        <Button title="Add customer" onPress={() => setAdding(true)} />
+      )}
       <FlatList
         data={shown}
         keyExtractor={(c) => c.id}
